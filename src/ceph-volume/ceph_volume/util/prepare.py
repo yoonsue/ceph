@@ -37,7 +37,9 @@ def write_keyring(osd_id, secret):
 def write_crush_device_class(osd_id, crush_device_class):
     path = '/var/lib/ceph/osd/%s-%s/crush_device_class' % (conf.cluster, osd_id)
     with open(path, 'wb') as f:
-        f.write(crush_device_class)
+        # add a newline for nice printing of this file in terminal
+        contents = "{}\n".format(crush_device_class)
+        f.write(contents.encode('utf-8'))
     system.chown(path)
 
 
