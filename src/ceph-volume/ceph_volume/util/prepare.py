@@ -34,6 +34,13 @@ def write_keyring(osd_id, secret):
     # TODO: do the restorecon dance on the osd_keyring path
 
 
+def write_crush_device_class(osd_id, crush_device_class):
+    path = '/var/lib/ceph/osd/%s-%s/crush_device_class' % (conf.cluster, osd_id)
+    with open(path, 'wb') as f:
+        f.write(crush_device_class)
+    system.chown(path)
+
+
 def create_id(fsid, json_secrets):
     """
     :param fsid: The osd fsid to create, always required

@@ -13,7 +13,7 @@ from .common import prepare_parser, rollback_osd
 logger = logging.getLogger(__name__)
 
 
-def prepare_filestore(device, journal, secrets, id_=None, fsid=None):
+def prepare_filestore(device, journal, secrets, id_=None, fsid=None, crush_device_class=None):
     """
     :param device: The name of the logical volume to work with
     :param journal: similar to device but can also be a regular/plain disk
@@ -42,9 +42,12 @@ def prepare_filestore(device, journal, secrets, id_=None, fsid=None):
     prepare_utils.osd_mkfs_filestore(osd_id, fsid)
     # write the OSD keyring if it doesn't exist already
     prepare_utils.write_keyring(osd_id, cephx_secret)
+    # write the crush_device_class file if given
+    if crush_device_class:
+        prepare_utils.write_crush_device_class(osd_id, crush_device_class)
 
 
-def prepare_bluestore(block, wal, db, secrets, id_=None, fsid=None):
+def prepare_bluestore(block, wal, db, secrets, id_=None, fsid=None, crush_device_class=None):
     """
     :param block: The name of the logical volume for the bluestore data
     :param wal: a regular/plain disk or logical volume, to be used for block.wal
@@ -68,6 +71,9 @@ def prepare_bluestore(block, wal, db, secrets, id_=None, fsid=None):
     prepare_utils.get_monmap(osd_id)
     # write the OSD keyring if it doesn't exist already
     prepare_utils.write_keyring(osd_id, cephx_secret)
+    # write the crush_device_class file if given
+    if crush_device_class:
+        prepare_utils.write_crush_device_class(osd_id, crush_device_class)
     # prepare the osd filesystem
     prepare_utils.osd_mkfs_bluestore(
         osd_id, fsid,
@@ -221,6 +227,7 @@ class Prepare(object):
                 secrets,
                 id_=self.osd_id,
                 fsid=osd_fsid,
+                crush_device_class=args.crush_device_class,
             )
         elif args.bluestore:
             block_lv = self.get_lv(args.data)
@@ -243,6 +250,7 @@ class Prepare(object):
                 secrets,
                 id_=self.osd_id,
                 fsid=osd_fsid,
+                crush_device_class=args.crush_device_class,
             )
 
     def main(self):
