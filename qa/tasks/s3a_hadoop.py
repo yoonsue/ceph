@@ -182,6 +182,8 @@ def fix_rgw_config(client, name):
     client.run(args=['cat', ceph_conf_path])
     client.run(args=['sudo', 'systemctl', 'restart', 'ceph-radosgw.target'])
     client.run(args=['sudo', 'systemctl', 'status', 'ceph-radosgw.target'])
+    # sleep for daemon to be completely up before creating admin user
+    time.sleep(10)
 
 
 def setup_user_bucket(client, dns_name, access_key, secret_key, bucket_name, testdir):
