@@ -156,6 +156,9 @@ def setup_user_bucket(client, dns_name, access_key, secret_key, bucket_name, tes
     Create user with access_key and secret_key that will be
     used for the s3a testdir
     """
+    while True:
+        log.info("Waiting for debug")
+        time.sleep(300)
     client.run(
         args=[
             'sudo',
