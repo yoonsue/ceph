@@ -88,6 +88,9 @@ def task(ctx, config):
     else:
         test_options = 'test -Dtest=S3a*,TestS3A*'
     try:
+        while True:
+           log.info("Waiting for live debug")
+           time.sleep(300)
         run_s3atest(rgw_node, maven_version, testdir, test_options)
         yield
     finally:
