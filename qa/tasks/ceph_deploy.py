@@ -267,6 +267,7 @@ def build_ceph_cluster(ctx, config):
         osds = ctx.cluster.only(teuthology.is_type('osd'))
         no_of_osds = 0
         for remote in osds.remotes.iterkeys():
+            remote.run(['which', 'mkfs.xfs'])
             # all devs should be lvm
             osd_create_cmd = './ceph-deploy osd create --debug ' + remote.shortname + ' '
             # default is bluestore so we just need config item for filestore
