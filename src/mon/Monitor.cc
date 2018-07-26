@@ -2745,6 +2745,7 @@ void Monitor::get_cluster_status(stringstream &ss, Formatter *f)
     f->dump_object("servicemap", mgrstatmon()->get_service_map());
     f->close_section();
   } else {
+    ss << "  [cold-store]\n";
     ss << "  cluster:\n";
     ss << "    id:     " << monmap->get_fsid() << "\n";
 
